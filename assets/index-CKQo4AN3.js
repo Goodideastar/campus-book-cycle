@@ -1,0 +1,1 @@
+const n=(e,a)=>!e||!a?0:Math.floor(e*a),t=e=>({onSale:"在售",sold:"已售出",offSale:"已下架",pending:"待确认",completed:"已完成",cancel:"已取消"})[e]||"未知",c=e=>({onSale:"success",sold:"info",offSale:"gray",pending:"warning",completed:"success",cancel:"danger"})[e]||"info";export{t as a,n as c,c as g};
