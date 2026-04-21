@@ -335,6 +335,114 @@ CREATE POLICY "Allow anonymous write access"
         </el-alert>
       </div>
     </el-card>
+
+    <!-- 云端数据同步（学生端可见，只读） -->
+    <el-card class="cloud-card" style="margin-top: 20px;" v-if="bookStore.user?.userType === 'student'">
+      <template #header>
+        <div class="card-header">
+          <span>☁️ 云端数据同步</span>
+          <el-tag 
+            :type="cloudConfigured ? 'success' : 'warning'" 
+            size="small"
+            effect="dark"
+          >
+            {{ cloudConfigured ? '已配置' : '未配置' }}
+          </el-tag>
+        </div>
+      </template>
+      
+      <!-- 配置区域（学生端也需要配置） -->
+      <div class="cloud-config-section">
+        <h4>🔧 API 配置</h4>
+        <el-form :model="cloudForm" label-width="120px" size="default">
+          <el-form-item label="Project URL">
+            <el-input 
+              v-model="cloudForm.url" 
+              placeholder="https://xxxxx.supabase.co"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="anon key">
+            <el-input 
+              v-model="cloudForm.anonKey" 
+              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              type="password"
+              show-password
+              clearable
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleSaveCloudConfig">
+              保存配置
+            </el-button>
+            <el-button type="warning" @click="handleTestConnection" :loading="testingConnection">
+              测试连接
+            </el-button>
+          </el-form-item>
+        </el-form>
+        
+        <!-- 连接状态 -->
+        <el-alert
+          v-if="connectionStatus.message"
+          :title="connectionStatus.success ? '✅ 连接成功' : '❌ 连接失败'"
+          :type="connectionStatus.success ? 'success' : 'error'"
+          :description="connectionStatus.message"
+          :closable="true"
+          @close="connectionStatus = {}"
+          style="margin-top: 10px;"
+        />
+      </div>
+
+      <el-divider />
+      
+      <!-- 操作区域（学生端只能下载和同步） -->
+      <div class="cloud-actions-section">
+        <h4>🚀 数据操作</h4>
+        <div class="cloud-actions">
+          <el-button 
+            type="success" 
+            @click="handleLoadFromCloud"
+            :loading="loadingFromCloud"
+            :disabled="!cloudConfigured"
+          >
+            <el-icon><Download /></el-icon>
+            从云端下载最新数据
+          </el-button>
+          <el-button 
+            type="warning" 
+            @click="handleSyncWithCloud"
+            :loading="syncingWithCloud"
+            :disabled="!cloudConfigured"
+          >
+            <el-icon><Refresh /></el-icon>
+            同步云端数据
+          </el-button>
+        </div>
+        
+        <!-- 最后同步时间 -->
+        <div v-if="lastSyncTime" class="last-sync-info">
+          <el-text type="info" size="small">
+            🕐 最后同步时间：{{ lastSyncTime }}
+          </el-text>
+        </div>
+        
+        <el-alert
+          title="使用说明"
+          type="info"
+          :closable="false"
+          style="margin-top: 15px;"
+        >
+          <template #default>
+            <ol style="margin: 0; padding-left: 20px; line-height: 1.8;">
+              <li>联系管理员获取 Supabase 配置信息</li>
+              <li>在上方填写 Project URL 和 anon key 并保存</li>
+              <li>点击"从云端下载最新数据"获取管理员上传的数据</li>
+              <li>页面将自动刷新以应用新数据</li>
+            </ol>
+          </template>
+        </el-alert>
+      </div>
+    </el-card>
   </div>
 </template>
 
