@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据结构查看</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; }
+        h2 { color: #666; margin-top: 30px; }
+        pre { background-color: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .table-info { margin-bottom: 20px; }
+        .table-name { font-weight: bold; font-size: 18px; margin-bottom: 10px; }
+        .field-info { margin-left: 20px; margin-bottom: 5px; }
+        .field-name { font-weight: bold; }
+        .field-type { color: #666; font-style: italic; }
+        .field-desc { color: #888; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>项目数据结构设计</h1>
+        
+        <div class="table-info">
+            <div class="table-name">1. 用户表 (campus_book_users)</div>
+            <div class="field-info">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">用户ID，使用时间戳</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">username:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">用户名</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">password:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">加密后的密码</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">userType:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">用户类型：student 或 admin</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">phone:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">手机号</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">email:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">电子邮箱</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">address:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">收货地址（旧字段，已迁移到addresses）</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">addresses:</span>
+                <span class="field-type">Array</span>
+                <span class="field-desc">收货地址数组</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">地址ID</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">name:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">收货人姓名</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">phone:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">联系电话</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">province:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">省份</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">city:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">城市</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">district:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">区县</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">detail:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">详细地址</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">isDefault:</span>
+                <span class="field-type">Boolean</span>
+                <span class="field-desc">是否默认地址</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">avatar:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">头像URL</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">createdAt:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">创建时间</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">updatedAt:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">更新时间</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">2. 书籍表 (campus_book_books)</div>
+            <div class="field-info">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍ID，使用时间戳</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">name:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍名称</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">author:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">作者</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">cateName:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">分类名称</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">originalPrice:</span>
+                <span class="field-type">Number</span>
+                <span class="field-desc">原价</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">salePrice:</span>
+                <span class="field-type">Number</span>
+                <span class="field-desc">售价</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">status:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">状态：onSale, sold, offSale</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">auditStatus:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">审核状态：unaudit, audited, rejected</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">publisher:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">发布人用户名</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">cover:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">封面图片URL</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">desc:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍描述</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">createdAt:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">创建时间</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">updatedAt:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">更新时间</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">3. 交易表 (campus_book_transactions)</div>
+            <div class="field-info">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">交易ID，使用时间戳</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">bookId:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍ID</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">bookName:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍名称</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">buyer:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">买家用户名</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">seller:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">卖家用户名</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">price:</span>
+                <span class="field-type">Number</span>
+                <span class="field-desc">价格</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">quantity:</span>
+                <span class="field-type">Number</span>
+                <span class="field-desc">数量</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">status:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">状态：pending, completed, canceled</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">tradeType:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">交易类型：offline, online</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">paymentMethod:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">支付方式：wechat, alipay</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">address:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">交易地址（线下交易）</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">phone:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">联系电话（线下交易）</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">shippingAddress:</span>
+                <span class="field-type">Object</span>
+                <span class="field-desc">收货地址信息</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">地址ID</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">name:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">收货人姓名</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">phone:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">联系电话</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">province:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">省份</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">city:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">城市</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">district:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">区县</span>
+            </div>
+            <div class="field-info" style="margin-left: 40px;">
+                <span class="field-name">detail:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">详细地址</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">createTime:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">创建时间</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">4. 通知表 (campus_book_notifications_{username})</div>
+            <div class="field-info">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">通知ID，使用时间戳</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">title:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">通知标题</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">description:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">通知描述</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">time:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">通知时间</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">read:</span>
+                <span class="field-type">Boolean</span>
+                <span class="field-desc">是否已读</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">5. 购物车表 (campus_book_cart_{username})</div>
+            <div class="field-info">
+                <span class="field-name">bookId:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">书籍ID</span>
+            </div>
+            <div class="field-info">
+                <span class="field-name">quantity:</span>
+                <span class="field-type">Number</span>
+                <span class="field-desc">数量</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">6. 轮播图表 (campus_book_carousel)</div>
+            <div class="field-info">
+                <span class="field-name">id:</span>
+                <span class="field-type">String</span>
+                <span class="field-desc">轮播图ID，使用书籍ID</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">7. 登录状态 (campus_book_login)</div>
+            <div class="field-info">
+                <span class="field-name">值:</span>
+                <span class="field-type">Boolean</span>
+                <span class="field-desc">登录状态，true表示已登录</span>
+            </div>
+        </div>
+        
+        <div class="table-info">
+            <div class="table-name">8. 当前用户信息 (campus_book_user)</div>
+            <div class="field-info">
+                <span class="field-desc">存储当前登录用户的完整信息，结构同用户表</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>检查localStorage</title>
+</head>
+<body>
+    <h1>localStorage 内容</h1>
+    <div id="result"></div>
+    
+    <script>
+        function displayLocalStorage() {
+            const result = document.getElementById('result');
+            let html = '';
+            
+            html += '<h2>用户信息 (campus_book_user)</h2>';
+            const userInfo = localStorage.getItem('campus_book_user');
+            html += `<pre>${userInfo ? JSON.stringify(JSON.parse(userInfo), null, 2) : '无'}</pre>`;
+            
+            html += '<h2>用户列表 (campus_book_users)</h2>';
+            const users = localStorage.getItem('campus_book_users');
+            html += `<pre>${users ? JSON.stringify(JSON.parse(users), null, 2) : '无'}</pre>`;
+            
+            html += '<h2>登录状态 (campus_book_login)</h2>';
+            const loginStatus = localStorage.getItem('campus_book_login');
+            html += `<pre>${loginStatus}</pre>`;
+            
+            result.innerHTML = html;
+        }
+        
+        displayLocalStorage();
+    </script>
+</body>
+</html>
