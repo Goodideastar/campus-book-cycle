@@ -155,8 +155,8 @@
       </template>
     </el-dialog>
 
-    <!-- 数据管理卡片 -->
-    <el-card class="data-manage-card" style="margin-top: 20px;">
+    <!-- 数据管理卡片（仅管理员可见） -->
+    <el-card class="data-manage-card" style="margin-top: 20px;" v-if="bookStore.user?.userType === 'admin'">
       <template #header>
         <div class="card-header">
           <span>📁 本地数据管理</span>
@@ -193,8 +193,8 @@
       />
     </el-card>
 
-    <!-- 云端存储管理 -->
-    <el-card class="cloud-card" style="margin-top: 20px;">
+    <!-- 云端存储管理（仅管理员可见） -->
+    <el-card class="cloud-card" style="margin-top: 20px;" v-if="bookStore.user?.userType === 'admin'">
       <template #header>
         <div class="card-header">
           <span>☁️ 云端存储 (Supabase)</span>
