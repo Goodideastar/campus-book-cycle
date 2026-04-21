@@ -1,0 +1,9 @@
+[build]
+  base = "campus-book-cycle/book-cycle"
+  publish = "campus-book-cycle/book-cycle/dist"
+  command = "cd campus-book-cycle/book-cycle && npm run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
