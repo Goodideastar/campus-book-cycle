@@ -661,7 +661,7 @@ export const useBookStore = defineStore('bookStore', {
       const defaultAdmin = {
         id: Date.now().toString(),
         username: 'admin',
-        password: hashPassword('essgxlt666'),
+        password: hashPassword('admin1'),
         userType: 'admin',
         phone: '',
         email: '',

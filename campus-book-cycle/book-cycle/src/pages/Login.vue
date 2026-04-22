@@ -268,7 +268,35 @@ const countdown = ref(0)
 let countdownTimer = null
 
 // 发送验证码
-const sendCode = () => {
+const sendCode = async () => {
+  // 先验证表单
+  try {
+    const valid = await new Promise((resolve) => {
+      forgotFormRef.value.validateField('phone', (isValid) => resolve(isValid))
+    })
+    
+    if (!valid) return
+  } catch (e) {
+    ElMessage.warning('请先输入手机号')
+    return
+  }
+  
+  // 验证手机号格式
+  const phoneRegex = /^1[3-9]\d{9}$/
+  if (!phoneRegex.test(forgotForm.value.phone)) {
+    ElMessage.error('请输入正确的手机号')
+    return
+  }
+  
+  // 检查用户是否存在
+  const existingUsers = JSON.parse(localStorage.getItem('campus_book_users') || '[]')
+  const user = existingUsers.find(u => u.username === forgotForm.value.username && u.phone === forgotForm.value.phone)
+  
+  if (!user) {
+    ElMessage.error('用户不存在或手机号错误')
+    return
+  }
+  
   // 模拟发送验证码
   ElMessage.success('验证码已发送到您的手机，请注意查收')
   

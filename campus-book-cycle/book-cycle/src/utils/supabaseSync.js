@@ -11,20 +11,22 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase 配置
+// Supabase 配置（默认配置，可通过 localStorage 覆盖）
 const SUPABASE_CONFIG = {
-  url: localStorage.getItem('supabase_url') || '',
-  anonKey: localStorage.getItem('supabase_anon_key') || ''
+  url: localStorage.getItem('supabase_url') || 'https://ujoxiamgnylyovvzmlom.supabase.co',
+  anonKey: localStorage.getItem('supabase_anon_key') || 'sb_publishable_B2r3gJuFX0ngr3cMMVWIgA_UW5oal_J'
 }
 
 // 定义需要备份的 LocalStorage 键名
 const STORAGE_KEYS = [
   'campus_book_books',           // 书籍数据
   'campus_book_users',           // 用户数据
-  'campus_book_transactions',    // 交易数据
+  'campus_book_orders',          // 订单数据
   'campus_book_cart',            // 购物车数据
   'campus_book_carousel_books',  // 轮播图数据
-  'campus_book_current_user',    // 当前登录用户
+  'campus_book_user',            // 当前登录用户
+  'campus_book_login',           // 登录状态
+  'campus_book_admin_notifications', // 管理员通知
 ]
 
 // Supabase 客户端实例
@@ -104,6 +106,7 @@ function collectLocalData() {
     data: {}
   }
 
+  // 收集固定键名的数据
   STORAGE_KEYS.forEach(key => {
     const value = localStorage.getItem(key)
     if (value !== null) {
@@ -114,6 +117,21 @@ function collectLocalData() {
       }
     }
   })
+
+  // 收集所有用户个人通知数据（键名格式：campus_book_notifications_${username}）
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key && key.startsWith('campus_book_notifications_')) {
+      const value = localStorage.getItem(key)
+      if (value !== null) {
+        try {
+          data.data[key] = JSON.parse(value)
+        } catch (e) {
+          console.warn(`解析 ${key} 数据失败:`, e)
+        }
+      }
+    }
+  }
 
   return data
 }
@@ -218,8 +236,16 @@ export async function loadFromCloud(force = false) {
     }
     
     // 执行导入
+    // 1. 导入固定键名的数据
     STORAGE_KEYS.forEach(key => {
       if (cloudData.data[key] !== undefined) {
+        localStorage.setItem(key, JSON.stringify(cloudData.data[key]))
+      }
+    })
+    
+    // 2. 导入用户个人通知数据（键名格式：campus_book_notifications_${username}）
+    Object.keys(cloudData.data).forEach(key => {
+      if (key.startsWith('campus_book_notifications_')) {
         localStorage.setItem(key, JSON.stringify(cloudData.data[key]))
       }
     })
@@ -264,6 +290,7 @@ export async function syncWithCloud() {
     } else {
       mergedData = { ...cloudData.data }  // 以云端数据为基础
       
+      // 合并固定键名的数据
       STORAGE_KEYS.forEach(key => {
         const localValue = localData.data[key]
         const cloudValue = cloudData.data[key]
@@ -275,6 +302,13 @@ export async function syncWithCloud() {
           mergedData[key] = localValue
         }
         // 否则使用云端数据（已在初始化时设置）
+      })
+      
+      // 合并用户个人通知数据
+      Object.keys(localData.data).forEach(key => {
+        if (key.startsWith('campus_book_notifications_')) {
+          mergedData[key] = localData.data[key]
+        }
       })
     }
     
@@ -300,8 +334,16 @@ export async function syncWithCloud() {
     }
     
     // 5. 更新本地数据
+    // 更新固定键名的数据
     STORAGE_KEYS.forEach(key => {
       if (mergedData[key] !== undefined) {
+        localStorage.setItem(key, JSON.stringify(mergedData[key]))
+      }
+    })
+    
+    // 更新用户个人通知数据
+    Object.keys(mergedData).forEach(key => {
+      if (key.startsWith('campus_book_notifications_')) {
         localStorage.setItem(key, JSON.stringify(mergedData[key]))
       }
     })

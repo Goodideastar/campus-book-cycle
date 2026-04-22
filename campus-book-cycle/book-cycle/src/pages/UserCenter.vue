@@ -199,47 +199,51 @@
         <div class="card-header">
           <span>☁️ 云端存储 (Supabase)</span>
           <el-tag 
-            :type="cloudConfigured ? 'success' : 'danger'" 
+            type="success"
             size="small"
             effect="dark"
           >
-            {{ cloudConfigured ? '已配置' : '未配置' }}
+            已配置
           </el-tag>
         </div>
       </template>
       
-      <!-- 配置区域 -->
-      <div class="cloud-config-section">
-        <h4>🔧 API 配置</h4>
-        <el-form :model="cloudForm" label-width="120px" size="default">
-          <el-form-item label="Project URL">
-            <el-input 
-              v-model="cloudForm.url" 
-              placeholder="https://xxxxx.supabase.co"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item label="anon key">
-            <el-input 
-              v-model="cloudForm.anonKey" 
-              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              type="password"
-              show-password
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleSaveCloudConfig">
-              保存配置
-            </el-button>
-            <el-button @click="handleClearCloudConfig">
-              清除配置
-            </el-button>
-            <el-button type="warning" @click="handleTestConnection" :loading="testingConnection">
-              测试连接
-            </el-button>
-          </el-form-item>
-        </el-form>
+      <!-- 操作区域 -->
+      <div class="cloud-actions-section">
+        <h4>🚀 数据操作</h4>
+        <div class="cloud-actions">
+          <el-button 
+            type="primary" 
+            @click="handleSaveToCloud"
+            :loading="savingToCloud"
+          >
+            <el-icon><Upload /></el-icon>
+            上传到云端
+          </el-button>
+          <el-button 
+            type="success" 
+            @click="handleLoadFromCloud"
+            :loading="loadingFromCloud"
+          >
+            <el-icon><Download /></el-icon>
+            从云端下载
+          </el-button>
+          <el-button 
+            type="warning" 
+            @click="handleSyncWithCloud"
+            :loading="syncingWithCloud"
+          >
+            <el-icon><Refresh /></el-icon>
+            双向同步
+          </el-button>
+          <el-button 
+            type="info" 
+            @click="handleTestConnection"
+            :loading="testingConnection"
+          >
+            测试连接
+          </el-button>
+        </div>
         
         <!-- 连接状态 -->
         <el-alert
@@ -251,42 +255,6 @@
           @close="connectionStatus = {}"
           style="margin-top: 10px;"
         />
-      </div>
-
-      <el-divider />
-      
-      <!-- 操作区域 -->
-      <div class="cloud-actions-section">
-        <h4>🚀 数据操作</h4>
-        <div class="cloud-actions">
-          <el-button 
-            type="primary" 
-            @click="handleSaveToCloud"
-            :loading="savingToCloud"
-            :disabled="!cloudConfigured"
-          >
-            <el-icon><Upload /></el-icon>
-            上传到云端
-          </el-button>
-          <el-button 
-            type="success" 
-            @click="handleLoadFromCloud"
-            :loading="loadingFromCloud"
-            :disabled="!cloudConfigured"
-          >
-            <el-icon><Download /></el-icon>
-            从云端下载
-          </el-button>
-          <el-button 
-            type="warning" 
-            @click="handleSyncWithCloud"
-            :loading="syncingWithCloud"
-            :disabled="!cloudConfigured"
-          >
-            <el-icon><Refresh /></el-icon>
-            双向同步
-          </el-button>
-        </div>
         
         <!-- 最后同步时间 -->
         <div v-if="lastSyncTime" class="last-sync-info">
@@ -303,34 +271,11 @@
         >
           <template #default>
             <ol style="margin: 0; padding-left: 20px; line-height: 1.8;">
-              <li>访问 <a href="https://supabase.com/" target="_blank" rel="noopener">Supabase</a> 注册账号</li>
-              <li>创建新项目，选择 Southeast Asia (Singapore) 区域</li>
-              <li>在 Project Settings → API 中复制 Project URL 和 anon key</li>
-              <li>在上方填写并保存配置</li>
-              <li>使用上传/下载/同步功能管理云端数据</li>
+              <li>使用"上传到云端"将本地数据保存到云端</li>
+              <li>使用"从云端下载"将云端数据覆盖到本地</li>
+              <li>使用"双向同步"智能合并本地和云端数据</li>
+              <li>学生端可以通过"云端数据同步"获取最新数据</li>
             </ol>
-            <el-divider />
-            <details>
-              <summary style="cursor: pointer; font-weight: bold; color: #409eff;">
-                📋 点击查看建表 SQL
-              </summary>
-              <pre style="background: #f5f7fa; padding: 15px; border-radius: 4px; overflow-x: auto; margin-top: 10px; font-size: 12px; line-height: 1.6;">CREATE TABLE app_data (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  data_type TEXT NOT NULL UNIQUE,
-  data JSONB NOT NULL,
-  version TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-ALTER TABLE app_data ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Allow anonymous read access"
-  ON app_data FOR SELECT USING (true);
-
-CREATE POLICY "Allow anonymous write access"
-  ON app_data FOR ALL USING (true) WITH CHECK (true);</pre>
-            </details>
           </template>
         </el-alert>
       </div>
@@ -342,44 +287,43 @@ CREATE POLICY "Allow anonymous write access"
         <div class="card-header">
           <span>☁️ 云端数据同步</span>
           <el-tag 
-            :type="cloudConfigured ? 'success' : 'warning'" 
+            type="success"
             size="small"
             effect="dark"
           >
-            {{ cloudConfigured ? '已配置' : '未配置' }}
+            已配置
           </el-tag>
         </div>
       </template>
       
-      <!-- 配置区域（学生端也需要配置） -->
-      <div class="cloud-config-section">
-        <h4>🔧 API 配置</h4>
-        <el-form :model="cloudForm" label-width="120px" size="default">
-          <el-form-item label="Project URL">
-            <el-input 
-              v-model="cloudForm.url" 
-              placeholder="https://xxxxx.supabase.co"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item label="anon key">
-            <el-input 
-              v-model="cloudForm.anonKey" 
-              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              type="password"
-              show-password
-              clearable
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleSaveCloudConfig">
-              保存配置
-            </el-button>
-            <el-button type="warning" @click="handleTestConnection" :loading="testingConnection">
-              测试连接
-            </el-button>
-          </el-form-item>
-        </el-form>
+      <!-- 操作区域（学生端只能下载和同步） -->
+      <div class="cloud-actions-section">
+        <h4>🚀 数据操作</h4>
+        <div class="cloud-actions">
+          <el-button 
+            type="success" 
+            @click="handleLoadFromCloud"
+            :loading="loadingFromCloud"
+          >
+            <el-icon><Download /></el-icon>
+            从云端下载最新数据
+          </el-button>
+          <el-button 
+            type="warning" 
+            @click="handleSyncWithCloud"
+            :loading="syncingWithCloud"
+          >
+            <el-icon><Refresh /></el-icon>
+            同步云端数据
+          </el-button>
+          <el-button 
+            type="info" 
+            @click="handleTestConnection"
+            :loading="testingConnection"
+          >
+            测试连接
+          </el-button>
+        </div>
         
         <!-- 连接状态 -->
         <el-alert
@@ -391,33 +335,6 @@ CREATE POLICY "Allow anonymous write access"
           @close="connectionStatus = {}"
           style="margin-top: 10px;"
         />
-      </div>
-
-      <el-divider />
-      
-      <!-- 操作区域（学生端只能下载和同步） -->
-      <div class="cloud-actions-section">
-        <h4>🚀 数据操作</h4>
-        <div class="cloud-actions">
-          <el-button 
-            type="success" 
-            @click="handleLoadFromCloud"
-            :loading="loadingFromCloud"
-            :disabled="!cloudConfigured"
-          >
-            <el-icon><Download /></el-icon>
-            从云端下载最新数据
-          </el-button>
-          <el-button 
-            type="warning" 
-            @click="handleSyncWithCloud"
-            :loading="syncingWithCloud"
-            :disabled="!cloudConfigured"
-          >
-            <el-icon><Refresh /></el-icon>
-            同步云端数据
-          </el-button>
-        </div>
         
         <!-- 最后同步时间 -->
         <div v-if="lastSyncTime" class="last-sync-info">
@@ -434,9 +351,8 @@ CREATE POLICY "Allow anonymous write access"
         >
           <template #default>
             <ol style="margin: 0; padding-left: 20px; line-height: 1.8;">
-              <li>联系管理员获取 Supabase 配置信息</li>
-              <li>在上方填写 Project URL 和 anon key 并保存</li>
               <li>点击"从云端下载最新数据"获取管理员上传的数据</li>
+              <li>点击"同步云端数据"进行双向同步</li>
               <li>页面将自动刷新以应用新数据</li>
             </ol>
           </template>
@@ -510,8 +426,8 @@ const handleClear = () => {
 
 // ==================== 云存储管理 ====================
 const cloudForm = reactive({
-  url: '',
-  anonKey: ''
+  url: localStorage.getItem('supabase_url') || 'https://ujoxiamgnylyovvzmlom.supabase.co',
+  anonKey: localStorage.getItem('supabase_anon_key') || 'sb_publishable_B2r3gJuFX0ngr3cMMVWIgA_UW5oal_J'
 })
 
 const cloudConfigured = ref(false)
@@ -542,11 +458,11 @@ const handleSaveCloudConfig = () => {
 const handleClearCloudConfig = () => {
   if (confirm('确定要清除 Supabase 配置吗？')) {
     clearSupabaseConfig()
-    cloudForm.url = ''
-    cloudForm.anonKey = ''
-    cloudConfigured.value = false
+    cloudForm.url = 'https://ujoxiamgnylyovvzmlom.supabase.co'
+    cloudForm.anonKey = 'sb_publishable_B2r3gJuFX0ngr3cMMVWIgA_UW5oal_J'
+    cloudConfigured.value = true
     connectionStatus.value = {}
-    ElMessage.info('配置已清除')
+    ElMessage.info('配置已重置为默认值')
   }
 }
 
@@ -631,12 +547,10 @@ const handleSyncWithCloud = async () => {
 onMounted(() => {
   dataSize.value = getDataSize()
   lastSyncTime.value = getLastSyncTime()
-  cloudConfigured.value = isSupabaseConfigured()
-  // 从 localStorage 加载已保存的配置
-  const savedUrl = localStorage.getItem('supabase_url') || ''
-  const savedAnonKey = localStorage.getItem('supabase_anon_key') || ''
-  cloudForm.url = savedUrl
-  cloudForm.anonKey = savedAnonKey
+  cloudConfigured.value = true
+  // 从 localStorage 加载已保存的配置，如果没有则使用默认值
+  cloudForm.url = localStorage.getItem('supabase_url') || 'https://ujoxiamgnylyovvzmlom.supabase.co'
+  cloudForm.anonKey = localStorage.getItem('supabase_anon_key') || 'sb_publishable_B2r3gJuFX0ngr3cMMVWIgA_UW5oal_J'
 })
 
 // 修改信息弹窗
